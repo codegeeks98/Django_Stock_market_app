@@ -2,4 +2,23 @@
 
 {% block content %}
 <h1>Welcome to the Django Project!</h1>
+<br>
+<br>
+
+<!--{{ api.data.1.volume }} And {{ api.data.1.adj_volume }}-->
+
+{% if api %} <!--It checks whether the variable api is defined and not empty or false.-->
+
+    {% if api == 'An Error...' %}
+        There was a problem with something, please try again...
+    {% else %}
+        {% for key,value in api.data.0.items %}
+            {{ key }} : {{ value }} <br>
+        {% endfor %}
+    {% endif %}
+
+{% else %}
+
+{% endif %}
+
 {% endblock %}
