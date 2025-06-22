@@ -29,11 +29,18 @@
     <!--<a class="nav-link" href="{% url 'about' %}">About</a>-->    
     <!--Here the "/about" is the name of the "View" that we are referring-->
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/add_stock">Add Stock</a>  <!--Links working in templates-->
+    <!--<a class="nav-link" href="{% url 'about' %}">About</a>-->    
+    <!--Here the "/about" is the name of the "View" that we are referring-->
+      </li>
       
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    <form action="{% url 'home' %}" method="POST" class="form-inline my-2 my-lg-0">
+        {% csrf_token %}
+      <input class="form-control mr-sm-2" type="search" placeholder="Get Stock Quote" aria-label="Search" name="ticker">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Stock Quote</button>
     </form>
   </div>
 </nav>
@@ -42,6 +49,22 @@
 <!--Body of the page starts from here-->
     <div class="container">
         <br>
+
+        <!--Working of the Django messsages-->
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning alert-dismissable" role="alert">
+                <button class="close" data-dismiss="alert">
+                    <small>
+                        <sup>x</sup>
+                    </small>
+                </button>
+                {{ message }}
+            </div><br>
+        {% endfor %}
+        {% endif %}    
+
+
         {% block content %}
         {% endblock %}
     </div>

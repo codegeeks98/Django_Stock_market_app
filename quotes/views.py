@@ -1,26 +1,72 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect 
+from .models import Stock
+from .forms import StockForm
+from django.contrib import messages
 
 def home(request):
     import requests
     import json
 
-    #https://marketstack.com/dashboard
-    #Above is the URL to the website from where we have taken the token for our API
+    if request.method == 'POST':
+        ticker = request.POST['ticker']
 
-    #Access_Key = f8ca281380745c84e43f07d5152ae705
+        #https://marketstack.com/search
 
-    #http://api.marketstack.com/v2/eod?access_key=f8ca281380745c84e43f07d5152ae705&symbols=AAPL
+        #We can serach the tikcer symbol to serach a perticular stock from the above URL
+
+        #ticker is the variable which is storing the name of the stock which is being serached in the search bar
+
+        #https://marketstack.com/dashboard
+        #Above is the URL to the website from where we have taken the token for our API
+
+        #Access_Key = f8ca281380745c84e43f07d5152ae705
+
+        #http://api.marketstack.com/v2/eod?access_key=f8ca281380745c84e43f07d5152ae705&symbols=AAPL
 
 
-    api_request = requests.get("http://api.marketstack.com/v2/eod?access_key=f8ca281380745c84e43f07d5152ae705&symbols=AAPL")
+        api_request = requests.get("http://api.marketstack.com/v2/eod?access_key=f8ca281380745c84e43f07d5152ae705&symbols="+ticker)
+        
+        try:
+            api = json.loads(api_request.content)  #Here we're parsing the response from the API
+        except Exception as e:
+            api = "An Error..."  
+
+        return render(request, 'home.html', {'api':api})    
+    else:
+        return render(request, 'home.html', {'ticker':"Enter a ticker symbol.."})    
+
+      
+
     
-    try:
-        api = json.loads(api_request.content)
-    except Exception as e:
-        api = "An Error has occured..."    
-
-    return render(request, 'home.html', {'api':api})
 
 
 def about(request):
-    return render(request, 'about.html', {})    
+    return render(request, 'about.html', {})   
+
+
+def add_stock(request):
+    if request.method == 'POST':
+        form = StockForm(request.POST or None) #Just putting the input from the user in the form variable
+        #Using the StockForm from the "forms.py"
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, ("Stock has been added successfully"))
+            return redirect('add_stock')
+
+    else:
+        ticker = Stock.objects.all() #Retriving the data from the DB
+        return render(request, 'add_stock.html', {'ticker':ticker}) 
+
+
+def delete(request, stock_id):
+    item = Stock.objects.get(pk=stock_id) #Fetching the data from the DB from it's ID
+
+    item.delete() #Deleting the given item
+    messages.success(request, ("Stock has been deleted!"))
+    return redirect('add_stock')
+
+
+        
+       
+

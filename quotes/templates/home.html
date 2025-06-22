@@ -1,20 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Welcome to the Django Project!</h1>
-<br>
-<br>
+
+{% if ticker %}
+    {{ ticker }}
+{% endif %}    
 
 <!--{{ api.data.1.volume }} And {{ api.data.1.adj_volume }}-->
 
 {% if api %} <!--It checks whether the variable api is defined and not empty or false.-->
 
     {% if api == 'An Error...' %}
-        There was a problem with something, please try again...
+        There was a problem with your ticker symbol, please try again...
     {% else %}
-        {% for key,value in api.data.0.items %}
+
+        <h1>{{ api.data.0.name }}</h1><br>
+        High: ${{ api.data.0.high }} <br>
+        Low: ${{ api.data.0.low }} <br>
+        Close: ${{ api.data.0.close }} <br>
+        Volume: ${{ api.data.0.volume }} <br>
+        Exchange: {{ api.data.0.exchange_code }} <br>
+        Date: {{ api.data.0.date }} <br>
+
+
+
+
+
+
+<!--To iterate through the values in the data
+
+{% for key,value in api.data.0.items %}
             {{ key }} : {{ value }} <br>
         {% endfor %}
+-->
     {% endif %}
 
 {% else %}
@@ -22,3 +40,15 @@
 {% endif %}
 
 {% endblock %}
+
+
+<!--Here is the sample data format
+
+
+{"pagination":{"limit":100,"offset":0,"count":100,"total":100},"data":
+[{"open":199.73,"high":200.37,"low":195.7,"close":196.45,"volume":51362400,"adj_high":200.37,"adj_low":195.7,"adj_close":196.45,"adj_open":199.73,"adj_volume":51447349,"split_factor":1,"dividend":0,"name":"Apple Inc","exchange_code":"NASDAQ","asset_type":"Stock","price_currency":"USD","symbol":"AAPL","exchange":"XNAS","date":"2025-06-13T00:00:00+0000"},
+{"open":199.08,"high":199.68,"low":197.36,"close":199.2,"volume":43758300,"adj_high":199.68,"adj_low":197.3601,"adj_close":199.2,"adj_open":199.08,"adj_volume":43904635,"split_factor":1,"dividend":0,"name":"Apple Inc","exchange_code":"NASDAQ","asset_type":"Stock","price_currency":"USD","symbol":"AAPL","exchange":"XNAS","date":"2025-06-12T00:00:00+0000"},
+{"open":203.5,"high":204.5,"low":198.41,"close":198.78,"volume":60820200,"adj_high":204.5,"adj_low":198.41,"adj_close":198.78,"adj_open":203.5,"adj_volume":60989857,"split_factor":1,"dividend":0,"name":"Apple Inc","exchange_code":"NASDAQ","asset_type":"Stock","price_currency":"USD","symbol":"AAPL","exchange":"XNAS","date":"2025-06-11T00:00:00+0000"},
+
+
+-->
