@@ -12,11 +12,44 @@
     </form>
 
 <br>    
+<br>
 
-{% for item in ticker %}
+<table class="table table-bordered table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">Company</th>
+      <th scope="col">Highest</th>
+      <th scope="col">Lowest</th>
+      <th scope="col">Closed</th>
+      <th scope="col">Volume</th>
+      <th scope="col">Exchange</th>
+      <th scope="col">Date</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in ticker %}
+    <tr>
+      <th scope="row">item.name</th>
+      <td>asdfg</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+      <td>@mdo</td>
+      <td><a href="{% url 'delete' item.id %}">Delete Stock</a></td>
+    </tr>
+    {% endfor %}
 
-    <h2>{{ item }} - <a href="{% url 'delete' item.id %}">Delete Stock</a></h2>
+    
+  </tbody>
+</table>
 
-{% endfor %}
+<br><br>
+
+    {% for list_item in output %}:
+     {{ list_item }}
+     <br> <br>
+    {% endfor %} 
 
 {% endblock %}

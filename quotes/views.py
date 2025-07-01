@@ -45,6 +45,9 @@ def about(request):
 
 
 def add_stock(request):
+    import requests
+    import json
+
     if request.method == 'POST':
         form = StockForm(request.POST or None) #Just putting the input from the user in the form variable
         #Using the StockForm from the "forms.py"
@@ -56,7 +59,21 @@ def add_stock(request):
 
     else:
         ticker = Stock.objects.all() #Retriving the data from the DB
-        return render(request, 'add_stock.html', {'ticker':ticker}) 
+        output = []
+
+        for ticker_item in ticker:
+            api_request = requests.get("http://api.marketstack.com/v2/eod?access_key=f8ca281380745c84e43f07d5152ae705&symbols="+str(ticker_item))
+
+            try:
+                api = json.loads(api_request.content)  #Here we're parsing the response from the API
+                output.append(api)  #Appending the api value in the output list
+
+            except Exception as e:
+                api = "An Error..."  
+
+
+        
+        return render(request, 'add_stock.html', {'ticker':ticker, 'output':output}) 
 
 
 def delete(request, stock_id):
